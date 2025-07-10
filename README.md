@@ -1,2 +1,2 @@
-# Stiff_diagrams_QGIS
-A simple self-explanatory R-script to create Stiff diagrams for QGIS software
+# Stiff diagram for using in QGIS software
+This is a simple and self-explanatory R-script to create Stiff diagram that can be loaded directly into QGIS as a .qml style file.
