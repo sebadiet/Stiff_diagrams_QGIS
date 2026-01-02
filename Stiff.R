@@ -60,8 +60,8 @@ chem.data # The entire file
 str(chem.data) #Data structure
 
 # Optional - Replace NAs with small values
-#chem.data[is.na(chem.data)] <- 1E-10
-#chem.data # Check that the replacements were effectively taken place
+chem.data[is.na(chem.data)] <- 1E-10
+chem.data # Check that the replacements were effectively taken place
 
 
 #===================================================================#
