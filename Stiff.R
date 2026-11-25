@@ -117,6 +117,7 @@ matrix.meq <- as.matrix(
 		 #"Cl + NO3"      = m.aux[,"Cl.meq"] + m.aux[, "NO3.meq"],
 		 check.names = FALSE
 ))
+rownames(matrix.meq) <- chem.data$ID         # ID as a row name
 
 # Analize the generated final matrix
 print(noquote(formatC(matrix.meq, digits = 2, format = "f", width = 6)))
@@ -143,7 +144,7 @@ cat("The absolute minimum values are:",
 cat("The absolute maximum values are:", 
     capture.output(print(apply(abs(matrix.meq), 2, max))), sep = "\n")
 
-round.value <- 5 
+round.value <- 5
 
 max.scale <- ceiling(max(abs(matrix.meq))/round.value)*round.value
 cat("The calculated max scale is:\n", 
@@ -178,11 +179,12 @@ aspect.ratio <- 0.6 # A value of 0.6 is highly recommended.
 #  Colours may be also provided as an RGB code using rgb() function. 
 #  To select the provided colors just uncomment the desired line
 
-matrix.color <- "springgreen"   # 1 up to 4 may be addd at the end
+#matrix.color <- "springgreen"   # 1 up to 4 may be addd at the end
 #matrix.color <- "lavenderblush" # 1 up to 4 may be addd at the end
 #matrix.color <- "mediumorchid"  # 1 up to 4 may be addd at the end
-#matrix.color <- "deepskyblue"   # 1 up to 4 may be addd at the end
+matrix.color <- "deepskyblue"   # 1 up to 4 may be addd at the end
 #matrix.color <- "forestgreen"
+#matrix.color <- "orangered3"    # 1 up to 4 may be addd at the end
 
 #--------------------------------------------------------------#
 # STEP 4 - Stiff plotting
@@ -192,7 +194,7 @@ matrix.color <- "springgreen"   # 1 up to 4 may be addd at the end
 # ID field in the data file. A different folder is created each time
 # users change the scale.
 
-folder.name <- paste0("svg_", max.scale, "_meq")
+folder.name <- paste0("svg_", file.name, "_", max.scale, "_meq", "_", matrix.color)
 dir.create(folder.name, showWarnings = FALSE)
 
 #  Creates an empty vector with the number of rows in the matrix
@@ -207,7 +209,7 @@ for (i in 1:dim(matrix.meq)[1]) {
         print(mypath[i])  
         svg(file = mypath[i], 
 	    height = 5*aspect.ratio, 
-	    width = 5, 
+	    width = 10, 
 	    bg = "transparent"
 	)
 	par(mar = c(0.5, 0.5, 2, 0.5))
@@ -227,7 +229,7 @@ for (i in 1:dim(matrix.meq)[1]) {
 	)
         lines(c(0, 0), c(-0.1, 1.1), lwd = 1.0)
         dev.off()
-        Sys.sleep(0.1)
+        Sys.sleep(0.01)
 }
 
 #--------------------------------------------------------------#
@@ -237,7 +239,8 @@ for (i in 1:dim(matrix.meq)[1]) {
 # references on the final map created with the layout. This Stiff diagram differs from the others by including axis labels and by the positioning of the represented ions. 
 
 # By default, the first element is plotted for reference.
-reference <- 1 # Change the order number of your disered sample
+#reference <- which(rownames(matrix.meq) == "P32") # change the order number of your disered sample
+reference <- 1
 # Valores a graficar
 x <- matrix.meq[reference, 1:dim(matrix.meq)[2]]*(-1)
 y <- c(1, 0.5, 0, 0, 0.5, 1)
@@ -260,12 +263,12 @@ ytext <- c(1.05, 0.5,-0.05, -0.05, 0.5, 1.05)
 adj.text <- c(rep(4,3), rep(2,3))
 
 # Scale file path
-mypath.scale <- file.path(getwd(), folder.name, paste("Scale_", max.scale, "_meq_", rownames(matrix.meq)[reference], ".png", sep = ""))
+mypath.scale <- file.path(getwd(), folder.name, paste("Scale_", max.scale, "_meq_", "_", matrix.color, "_", rownames(matrix.meq)[reference], ".png", sep = ""))
 
 # Print the scale file. Run the code to the end of this section
 png(file = mypath.scale, 
      height = 5*aspect.ratio, 
-     width = 5, 
+     width = 10, 
      bg = "transparent", 
      units = "in", 
      res = 200
@@ -325,7 +328,7 @@ dev.off()
 #==============================================================#
 
 # Select the size. A value between 40 and 50 mm is recommended.
-size <- 40 # mm 
+size <- 30 # mm 
 
 # RUN TO THE END WITHOUT CHANGING ANYTHING.
 
@@ -366,7 +369,7 @@ uuids.ID      <- generateMultipleUUIDs(num.uuids.ID)
 
 # Define the QML content with different SVG files for each point
 
-qml.name <- paste0("stiff_", max.scale, "_meq.qml")
+qml.name <- paste0(file.name, "_stiff_", max.scale, "_meq", "_", matrix.color, ".qml")
 con1 <- file(qml.name, open = "w")
 
 # HEADER 
